@@ -3,13 +3,13 @@ use Irssi 20020101.0250 ();
 use vars qw($VERSION %IRSSI); 
 $VERSION = "1.2";
 %IRSSI = (
-    authors     => "Timo Sirainen, Ian Peters, modified by Daniele Sluijters, Edwin \"Dutchy\" Smulders",
-    contact	=> "tss\@iki.fi, mail\@dutchy.org", 
+    authors     => "Timo Sirainen, Ian Peters, modified by Daniele Sluijters, Edwin \"Dutchy\" Smulders, Ed Holland",
+    contact	=> "tss\@iki.fi, mail\@dutchy.org, edjholland\@gmail.com", 
     name        => "Nick Color",
     description => "assign a different color for each nick",
     license	=> "Public Domain",
-    url		=> "https://github.com/Dutchy-/irssi-nickcolor",
-    changed	=> "2012-04-23T15:17+0100"
+    url		=> "https://github.com/edholland/irssi-nickcolor",
+    changed	=> "15/11/2013"
 );
 
 # hm.. i should make it possible to use the existing one..
