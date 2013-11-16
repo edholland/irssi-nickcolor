@@ -19,8 +19,8 @@ Irssi::theme_register([
 
 my %saved_colors;
 my %session_colors = {};
-my @colors = qw/2 3 4 5 6 7 9 10 11 12 13/;
-# This hash is used globally across all channels, so collisions may still occur where channel size < 11
+my @colors = qw/3 4 5 6 7 8 9 10 11 12 13 14/;
+# This hash is used globally across all channels, so collisions may still occur where channel size <= 12
 my %used;
 foreach my $c (@colors) {
     $used{$c} = 0;
