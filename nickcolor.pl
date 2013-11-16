@@ -22,9 +22,7 @@ my %session_colors = {};
 my @colors = qw/3 4 5 6 7 8 9 10 11 12 13 14/;
 # This hash is used globally across all channels, so collisions may still occur where channel size <= 12
 my %used;
-foreach my $c (@colors) {
-    $used{$c} = 0;
-}
+my %lens;
 
 sub load_colors {
   open COLORS, "$ENV{HOME}/.irssi/saved_colors";
@@ -37,6 +35,7 @@ sub load_colors {
       # Set color, and keep counter for later
       $saved_colors{$nick} = $color;
       $used{$color} += 1;
+      $lens{length $nick}{$color} += 1;
     }
   }
 
@@ -71,6 +70,8 @@ sub sig_nick {
   }
   # Dont increment the used counters here as this is 1:1 swap, and 
   # frequent nick changes could affect the distribution of colours otherwise
+  $lens{length $newnick}{$color} += 1;
+  $lens{length $nick}{$color} -= 1;
 }
 
 # This gave reasonable distribution values when run across
@@ -112,7 +113,9 @@ sub sig_public {
     $color = simple_hash $nick;
     # If we're not trying to use the max value go ahead, else use the min value
     my $max = (sort {$used{$a} cmp $used{$b} } keys %used)[-1];
-    if ( $color != $max ) {
+    my $ref = %lens->{length $nick};
+    my $len_max = (sort {$ref->{$a} cmp $ref->{$b} } keys %{$ref} )[-1];
+    if ( ($color != $max) && ($color != $len_max ) ) {
       $session_colors{$nick} = $color;
     } else {
       # Pick the _least_ used color
@@ -121,6 +124,7 @@ sub sig_public {
     }
     # Store the color used
     $used{$color} += 1;
+    $lens{length $nick}{$color} += 1;
   } 
 
   $color = "0".$color if ($color < 10);
