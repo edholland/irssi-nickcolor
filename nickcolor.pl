@@ -20,6 +20,11 @@ Irssi::theme_register([
 my %saved_colors;
 my %session_colors = {};
 my @colors = qw/2 3 4 5 6 7 9 10 11 12 13/;
+# This hash is used globally across all channels, so collisions may still occur where channel size < 11
+my %used;
+foreach my $c (@colors) {
+    $used{$c} = 0;
+}
 
 sub load_colors {
   open COLORS, "$ENV{HOME}/.irssi/saved_colors";
@@ -29,7 +34,9 @@ sub load_colors {
     my @lines = split "\n";
     foreach my $line (@lines) {
       my($nick, $color) = split ":", $line;
+      # Set color, and keep counter for later
       $saved_colors{$nick} = $color;
+      $used{$color} += 1;
     }
   }
 
@@ -62,6 +69,8 @@ sub sig_nick {
   } elsif ($color = $session_colors{$nick}) {
     $session_colors{$newnick} = $color;
   }
+  # Dont increment the used counters here as this is 1:1 swap, and 
+  # frequent nick changes could affect the distribution of colours otherwise
 }
 
 # This gave reasonable distribution values when run across
@@ -102,18 +111,7 @@ sub sig_public {
   # Let's assign this nick a color
   if (!$color) {
     $color = simple_hash $nick;
-    # We don't want people with the same nick length to have the same color 
-    my %used;
-    foreach my $c (@colors) {
-        $used{$c} = 0;
-    }
-    # Count colors for this specific nick length
-    while ( my ($saved_nick, $saved_color) = each(%session_colors)) {
-      if (length($saved_nick) == length($nick)) {
-        # Length is equal, add one
-        $used{$saved_color} += 1;
-      }
-    }
+
     # Check if the color we want is available
     if ( $used{$color} == 0 ) {
       $session_colors{$nick} = $color ;
@@ -122,6 +120,8 @@ sub sig_public {
       $color = (sort {$used{$a} cmp $used{$b} } keys %used)[0];
       $session_colors{$nick} = $color;
     }
+    # Store the color used
+    $used{$color} += 1;
   } 
 
   $color = "0".$color if ($color < 10);
