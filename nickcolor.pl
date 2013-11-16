@@ -87,7 +87,7 @@ sub simple_hash {
     $total += ord($char) * $counter;
   }
 
-  return $colors[ $counter % length(@colors) ];
+  return $colors[ $counter % scalar(@colors) ];
 }
 
 # FIXME: breaks /HILIGHT etc.
@@ -111,7 +111,8 @@ sub sig_public {
   if (!$color) {
     $color = simple_hash $nick;
     # If we're not trying to use the max value go ahead, else use the min value
-    if ( $used{$color} != (sort {$used{$a} cmp $used{$b} } keys %used)[-1] ) {
+    my $max = (sort {$used{$a} cmp $used{$b} } keys %used)[-1];
+    if ( $color != $max ) {
       $session_colors{$nick} = $color;
     } else {
       # Pick the _least_ used color
