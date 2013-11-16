@@ -110,10 +110,9 @@ sub sig_public {
   # Let's assign this nick a color
   if (!$color) {
     $color = simple_hash $nick;
-
-    # Check if the color we want is available
-    if ( $used{$color} == 0 ) {
-      $session_colors{$nick} = $color ;
+    # If we're not trying to use the max value go ahead, else use the min value
+    if ( $used{$color} != (sort {$used{$a} cmp $used{$b} } keys %used)[-1] ) {
+      $session_colors{$nick} = $color;
     } else {
       # Pick the _least_ used color
       $color = (sort {$used{$a} cmp $used{$b} } keys %used)[0];
