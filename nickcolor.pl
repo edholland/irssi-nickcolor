@@ -165,6 +165,10 @@ sub cmd_color {
       Irssi::print (chr (3) . "$saved_colors{$nick}$nick" .
 		    chr (3) . "1 ($saved_colors{$nick})");
     }
+    Irssi::print ("\nUsed colors:");
+    foreach my $i (keys %used) {
+      Irssi::print (chr (3) . "$i" . "Color #$i Number #$used{$i}");
+    }
   } elsif ($op eq "preview") {
     Irssi::print ("\nAvailable colors:");
     foreach my $i (2..14) {
