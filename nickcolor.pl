@@ -80,15 +80,14 @@ sub simple_hash {
   my ($string) = @_;
   chomp $string;
   my @chars = split //, $string;
-  my $counter;
+  my ($counter, $total) = (0,0);
 
   foreach my $char (@chars) {
-    $counter += ord $char;
+    $counter++;
+    $total += ord($char) * $counter;
   }
 
-  $counter = $colors[$counter % 11];
-
-  return $counter;
+  return $colors[ $counter % length(@colors) ];
 }
 
 # FIXME: breaks /HILIGHT etc.
@@ -166,7 +165,7 @@ sub cmd_color {
 		    chr (3) . "1 ($saved_colors{$nick})");
     }
     Irssi::print ("\nUsed colors:");
-    foreach my $i (keys %used) {
+    foreach my $i (sort {$a <=> $b} keys %used) {
       Irssi::print (chr (3) . "$i" . "Color #$i Number #$used{$i}");
     }
   } elsif ($op eq "preview") {
