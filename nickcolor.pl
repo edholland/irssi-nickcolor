@@ -115,7 +115,7 @@ sub sig_public {
     my $max = (sort {$used{$a} cmp $used{$b} } keys %used)[-1];
     my $ref = %lens->{length $nick};
     my $len_max = (sort {$ref->{$a} cmp $ref->{$b} } keys %{$ref} )[-1];
-    if ( ($color != $max) && ($color != $len_max ) ) {
+    if ( ($ref->{$color} == 0) || ( ($color != $max) && ($color != $len_max ) ) ) {
       $session_colors{$nick} = $color;
     } else {
       # Pick the _least_ used color
