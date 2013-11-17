@@ -22,6 +22,10 @@ my %session_colors = {};
 my @colors = qw/3 4 5 6 7 8 9 10 11 12 13 14/;
 # This hash is used globally across all channels, so collisions may still occur where channel size <= 12
 my %used;
+# Prefill this hash to ensure we give out all colors later 
+foreach my $c (@colors) {
+  $used{$c} = 0;
+}
 my %lens;
 
 sub load_colors {
